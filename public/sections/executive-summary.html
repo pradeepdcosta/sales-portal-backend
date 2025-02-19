@@ -831,12 +831,20 @@
                 const response = await fetch('/api/generate-pdf', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/pdf'
                     }
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to generate PDF');
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to generate PDF');
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to generate PDF');
                 }
 
                 // Create a blob from the PDF Stream

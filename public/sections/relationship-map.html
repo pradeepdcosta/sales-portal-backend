@@ -516,7 +516,7 @@
                                 </select>
                             </td>
                             <td>
-                                <button class="delete-btn" onclick="deleteRow(this)">×</button>
+                                <button class="delete-btn">×</button>
                             </td>
                         </tr>
                     </tbody>
@@ -545,7 +545,7 @@
                             <td><input type="date" class="form-control" name="sponsor1_last_engagement"></td>
                             <td><input type="date" class="form-control" name="sponsor1_next_engagement"></td>
                             <td>
-                                <button class="delete-btn" onclick="deleteRow(this)">×</button>
+                                <button class="delete-btn">×</button>
                             </td>
                         </tr>
                     </tbody>
@@ -626,8 +626,9 @@
             document.querySelector('.cancel-btn').addEventListener('click', cancelEdit);
             document.getElementById('addCustomerContactBtn').addEventListener('click', addCustomerContact);
             document.getElementById('addExecutiveSponsorBtn').addEventListener('click', addExecutiveSponsor);
+            document.querySelector('.print-btn').addEventListener('click', generatePDF);
 
-            // Add event listeners for delete buttons
+            // Add event listeners for existing delete buttons
             document.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     deleteRow(this);
@@ -989,12 +990,20 @@
                 const response = await fetch('/api/generate-pdf', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/pdf'
                     }
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to generate PDF');
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to generate PDF');
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to generate PDF');
                 }
 
                 // Create a blob from the PDF Stream
