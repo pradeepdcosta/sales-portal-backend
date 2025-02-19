@@ -407,9 +407,9 @@
 
             <div class="tab-container">
                 <div class="tab-buttons">
-                    <button class="tab-button active" onclick="showTab('part1')">Part 1: Strategy</button>
-                    <button class="tab-button" onclick="showTab('part2')">Part 2: Opportunities</button>
-                    <button class="tab-button" onclick="showTab('part3')">Part 3: Business Development</button>
+                    <button class="tab-button active" data-tab="part1">Part 1: Strategy</button>
+                    <button class="tab-button" data-tab="part2">Part 2: Opportunities</button>
+                    <button class="tab-button" data-tab="part3">Part 3: Business Development</button>
                 </div>
 
                 <div id="part1" class="tab-content active">
@@ -798,9 +798,12 @@
             if (isEditMode) {
                 // Store original values before editing
                 formControls.forEach(control => {
-                    originalData[control.name] = control.value;
+                    if (control.name) {
+                        originalData[control.name] = control.value;
+                    }
                     control.classList.add('editable');
                     control.removeAttribute('readonly');
+                    control.disabled = false;
                 });
                 editButton.style.display = 'none';
                 actionButtons.classList.add('show');
@@ -808,6 +811,7 @@
                 formControls.forEach(control => {
                     control.classList.remove('editable');
                     control.setAttribute('readonly', true);
+                    control.disabled = true;
                 });
                 editButton.style.display = 'block';
                 actionButtons.classList.remove('show');
@@ -819,11 +823,12 @@
             const formControls = document.querySelectorAll('.form-control');
             formControls.forEach(control => {
                 // Restore original value
-                if (originalData[control.name]) {
+                if (control.name && originalData[control.name] !== undefined) {
                     control.value = originalData[control.name];
                 }
                 control.classList.remove('editable');
                 control.setAttribute('readonly', true);
+                control.disabled = true;
             });
             document.getElementById('editButton').style.display = 'block';
             document.getElementById('actionButtons').classList.remove('show');
@@ -847,6 +852,11 @@
             document.getElementById('editButton').addEventListener('click', toggleEditMode);
             document.querySelector('.save-btn').addEventListener('click', saveChanges);
             document.querySelector('.cancel-btn').addEventListener('click', cancelChanges);
+
+            // Add event listeners for tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => showTab(button.dataset.tab));
+            });
 
             // Set all form controls to readonly and disabled initially
             const formControls = document.querySelectorAll('.form-control');
@@ -874,7 +884,7 @@
             });
 
             document.getElementById(tabId).classList.add('active');
-            document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
         }
 
         async function generatePDF() {

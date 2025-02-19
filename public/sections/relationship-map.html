@@ -482,7 +482,7 @@
 
             <div class="form-group">
                 <div class="form-label">Key Customer Contacts</div>
-                <button class="add-contact-btn" onclick="addCustomerContact()">+ Add Contact</button>
+                <button class="add-contact-btn" id="addCustomerContactBtn">+ Add Contact</button>
                 <table class="contacts-table">
                     <thead>
                         <tr>
@@ -525,7 +525,7 @@
 
             <div class="form-group">
                 <div class="form-label">Executive Sponsors</div>
-                <button class="add-contact-btn" onclick="addExecutiveSponsor()">+ Add Executive Sponsor</button>
+                <button class="add-contact-btn" id="addExecutiveSponsorBtn">+ Add Executive Sponsor</button>
                 <table class="contacts-table">
                     <thead>
                         <tr>
@@ -624,6 +624,15 @@
             document.getElementById('editButton').addEventListener('click', toggleEditMode);
             document.querySelector('.save-btn').addEventListener('click', saveChanges);
             document.querySelector('.cancel-btn').addEventListener('click', cancelEdit);
+            document.getElementById('addCustomerContactBtn').addEventListener('click', addCustomerContact);
+            document.getElementById('addExecutiveSponsorBtn').addEventListener('click', addExecutiveSponsor);
+
+            // Add event listeners for delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    deleteRow(this);
+                });
+            });
 
             // Set all form controls to readonly and disabled initially
             const formControls = document.querySelectorAll('.form-control');
@@ -631,6 +640,10 @@
                 control.setAttribute('readonly', true);
                 control.disabled = true;
             });
+
+            // Disable add contact buttons initially
+            document.getElementById('addCustomerContactBtn').disabled = true;
+            document.getElementById('addExecutiveSponsorBtn').disabled = true;
 
             // Load the account data
             loadAccountData();
@@ -788,21 +801,37 @@
             const formControls = document.querySelectorAll('.form-control');
             const editButton = document.getElementById('editButton');
             const actionButtons = document.getElementById('actionButtons');
+            const addButtons = document.querySelectorAll('.add-contact-btn');
+            const deleteButtons = document.querySelectorAll('.delete-btn');
 
             if (isEditMode) {
                 // Store original values before editing
                 formControls.forEach(control => {
-                    originalData[control.name] = control.value;
+                    if (control.name) {
+                        originalData[control.name] = control.value;
+                    }
                     control.classList.add('editable');
                     control.removeAttribute('readonly');
+                    control.disabled = false;
                 });
+                
+                // Enable add and delete buttons
+                addButtons.forEach(btn => btn.disabled = false);
+                deleteButtons.forEach(btn => btn.style.display = 'block');
+                
                 editButton.style.display = 'none';
                 actionButtons.classList.add('show');
             } else {
                 formControls.forEach(control => {
                     control.classList.remove('editable');
                     control.setAttribute('readonly', true);
+                    control.disabled = true;
                 });
+                
+                // Disable add and delete buttons
+                addButtons.forEach(btn => btn.disabled = true);
+                deleteButtons.forEach(btn => btn.style.display = 'none');
+                
                 editButton.style.display = 'block';
                 actionButtons.classList.remove('show');
             }
@@ -811,14 +840,23 @@
         function cancelEdit() {
             isEditMode = false;
             const formControls = document.querySelectorAll('.form-control');
+            const addButtons = document.querySelectorAll('.add-contact-btn');
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+
             formControls.forEach(control => {
                 // Restore original value
-                if (originalData[control.name]) {
+                if (control.name && originalData[control.name] !== undefined) {
                     control.value = originalData[control.name];
                 }
                 control.classList.remove('editable');
                 control.setAttribute('readonly', true);
+                control.disabled = true;
             });
+
+            // Disable add and delete buttons
+            addButtons.forEach(btn => btn.disabled = true);
+            deleteButtons.forEach(btn => btn.style.display = 'none');
+
             document.getElementById('editButton').style.display = 'block';
             document.getElementById('actionButtons').classList.remove('show');
             originalData = {}; // Clear stored original data
@@ -837,35 +875,41 @@
             const newRow = document.createElement('tr');
             newRow.classList.add('adding');
             newRow.innerHTML = `
-                <td><input type="text" class="form-control" name="contact${customerContactCounter}_name"></td>
-                <td><input type="text" class="form-control" name="contact${customerContactCounter}_position"></td>
-                <td><input type="text" class="form-control" name="contact${customerContactCounter}_department"></td>
-                <td><input type="text" class="form-control" name="contact${customerContactCounter}_contact" placeholder="Email/Phone"></td>
+                <td><input type="text" class="form-control editable" name="contact${customerContactCounter}_name"></td>
+                <td><input type="text" class="form-control editable" name="contact${customerContactCounter}_position"></td>
+                <td><input type="text" class="form-control editable" name="contact${customerContactCounter}_department"></td>
+                <td><input type="text" class="form-control editable" name="contact${customerContactCounter}_contact" placeholder="Email/Phone"></td>
                 <td>
-                    <select class="form-control" name="contact${customerContactCounter}_influence">
+                    <select class="form-control editable" name="contact${customerContactCounter}_influence">
                         <option>High</option>
                         <option>Medium</option>
                         <option>Low</option>
                     </select>
                 </td>
                 <td>
-                    <select class="form-control" name="contact${customerContactCounter}_relationship">
+                    <select class="form-control editable" name="contact${customerContactCounter}_relationship">
                         <option>Strong Advocate</option>
                         <option>Neutral</option>
                         <option>Needs Development</option>
                     </select>
                 </td>
                 <td>
-                    <button class="delete-btn" onclick="deleteRow(this)">×</button>
+                    <button class="delete-btn">×</button>
                 </td>
             `;
             tbody.appendChild(newRow);
             
-            // Make fields editable in edit mode
+            // Add event listener to new delete button
+            const deleteBtn = newRow.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', function() {
+                deleteRow(this);
+            });
+            
+            // Enable fields in edit mode
             const inputs = newRow.querySelectorAll('.form-control');
             inputs.forEach(input => {
-                input.classList.add('editable');
                 input.removeAttribute('readonly');
+                input.disabled = false;
             });
         }
 
@@ -876,22 +920,28 @@
             const newRow = document.createElement('tr');
             newRow.classList.add('adding');
             newRow.innerHTML = `
-                <td><input type="text" class="form-control" name="sponsor${executiveSponsorCounter}_name"></td>
-                <td><input type="text" class="form-control" name="sponsor${executiveSponsorCounter}_position"></td>
-                <td><textarea class="form-control" rows="2" name="sponsor${executiveSponsorCounter}_focus"></textarea></td>
-                <td><input type="date" class="form-control" name="sponsor${executiveSponsorCounter}_last_engagement"></td>
-                <td><input type="date" class="form-control" name="sponsor${executiveSponsorCounter}_next_engagement"></td>
+                <td><input type="text" class="form-control editable" name="sponsor${executiveSponsorCounter}_name"></td>
+                <td><input type="text" class="form-control editable" name="sponsor${executiveSponsorCounter}_position"></td>
+                <td><textarea class="form-control editable" rows="2" name="sponsor${executiveSponsorCounter}_focus"></textarea></td>
+                <td><input type="date" class="form-control editable" name="sponsor${executiveSponsorCounter}_last_engagement"></td>
+                <td><input type="date" class="form-control editable" name="sponsor${executiveSponsorCounter}_next_engagement"></td>
                 <td>
-                    <button class="delete-btn" onclick="deleteRow(this)">×</button>
+                    <button class="delete-btn">×</button>
                 </td>
             `;
             tbody.appendChild(newRow);
             
-            // Make fields editable in edit mode
+            // Add event listener to new delete button
+            const deleteBtn = newRow.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', function() {
+                deleteRow(this);
+            });
+            
+            // Enable fields in edit mode
             const inputs = newRow.querySelectorAll('.form-control');
             inputs.forEach(input => {
-                input.classList.add('editable');
                 input.removeAttribute('readonly');
+                input.disabled = false;
             });
         }
 
@@ -901,7 +951,6 @@
             row.classList.add('removing');
             setTimeout(() => {
                 row.remove();
-                // Renumber remaining rows
                 renumberRows();
             }, 300);
         }
