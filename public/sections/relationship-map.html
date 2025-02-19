@@ -624,15 +624,21 @@
             document.getElementById('editButton').addEventListener('click', toggleEditMode);
             document.querySelector('.save-btn').addEventListener('click', saveChanges);
             document.querySelector('.cancel-btn').addEventListener('click', cancelEdit);
+
+            // Add event listeners for the Add Contact and Add Executive Sponsor buttons
             document.getElementById('addCustomerContactBtn').addEventListener('click', addCustomerContact);
             document.getElementById('addExecutiveSponsorBtn').addEventListener('click', addExecutiveSponsor);
-            document.querySelector('.print-btn').addEventListener('click', generatePDF);
 
-            // Add event listeners for existing delete buttons
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    deleteRow(this);
-                });
+            // Add event delegation for delete buttons
+            document.getElementById('customerContactsBody').addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-btn')) {
+                    deleteRow(e.target);
+                }
+            });
+            document.getElementById('executiveSponsorsBody').addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-btn')) {
+                    deleteRow(e.target);
+                }
             });
 
             // Set all form controls to readonly and disabled initially
@@ -895,16 +901,10 @@
                     </select>
                 </td>
                 <td>
-                    <button class="delete-btn">×</button>
+                    <button class="delete-btn" type="button">×</button>
                 </td>
             `;
             tbody.appendChild(newRow);
-            
-            // Add event listener to new delete button
-            const deleteBtn = newRow.querySelector('.delete-btn');
-            deleteBtn.addEventListener('click', function() {
-                deleteRow(this);
-            });
             
             // Enable fields in edit mode
             const inputs = newRow.querySelectorAll('.form-control');
@@ -927,16 +927,10 @@
                 <td><input type="date" class="form-control editable" name="sponsor${executiveSponsorCounter}_last_engagement"></td>
                 <td><input type="date" class="form-control editable" name="sponsor${executiveSponsorCounter}_next_engagement"></td>
                 <td>
-                    <button class="delete-btn">×</button>
+                    <button class="delete-btn" type="button">×</button>
                 </td>
             `;
             tbody.appendChild(newRow);
-            
-            // Add event listener to new delete button
-            const deleteBtn = newRow.querySelector('.delete-btn');
-            deleteBtn.addEventListener('click', function() {
-                deleteRow(this);
-            });
             
             // Enable fields in edit mode
             const inputs = newRow.querySelectorAll('.form-control');
@@ -949,6 +943,8 @@
         function deleteRow(button) {
             if (!isEditMode) return;
             const row = button.closest('tr');
+            if (!row) return;
+            
             row.classList.add('removing');
             setTimeout(() => {
                 row.remove();
