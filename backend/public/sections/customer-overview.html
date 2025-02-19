@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Overview</title>
+    <script>
+        let originalData = {};
+        let isEditMode = false;
+
+        function toggleEditMode() {
+            console.log('Toggle edit mode called');
+            isEditMode = !isEditMode;
+            const formControls = document.querySelectorAll('.form-control');
+            const editButton = document.getElementById('editButton');
+            const actionButtons = document.getElementById('actionButtons');
+
+            if (isEditMode) {
+                formControls.forEach(control => {
+                    if (control.name) {
+                        originalData[control.name] = control.value;
+                    }
+                    control.classList.add('editable');
+                    control.removeAttribute('readonly');
+                    control.disabled = false;
+                });
+                editButton.style.display = 'none';
+                actionButtons.classList.add('show');
+            } else {
+                formControls.forEach(control => {
+                    control.classList.remove('editable');
+                    control.setAttribute('readonly', true);
+                    control.disabled = true;
+                });
+                editButton.style.display = 'block';
+                actionButtons.classList.remove('show');
+            }
+        }
+
+        function logout() {
+            console.log('Logout called');
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = '/start';
+        }
+
+        function generatePDF() {
+            console.log('Generate PDF called');
+            window.print();
+        }
+
+        // Initialize when the page loads
+        window.onload = function() {
+            console.log('Window loaded');
+            // Set all form controls to readonly initially
+            const formControls = document.querySelectorAll('.form-control');
+            formControls.forEach(control => {
+                control.setAttribute('readonly', true);
+                control.disabled = true;
+            });
+
+            // Load the account data
+            loadAccountData();
+        };
+    </script>
+</head>
+<body>
+    <div class="section-header">
+        <h2>02 CUSTOMER OVERVIEW</h2>
+        <button id="editButton" class="edit-btn" onclick="toggleEditMode()">Edit</button>
+        <div id="actionButtons" class="action-buttons">
+            <button class="save-btn" onclick="saveChanges()">Save Changes</button>
+            <button class="cancel-btn" onclick="cancelChanges()">Cancel Changes</button>
+        </div>
+    </div>
+
+    <div class="user-info">
+        <span id="userName"></span>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <button class="print-btn" onclick="generatePDF()">
+        <i class="fas fa-print"></i> Print Full Document
+    </button>
+
+    <div class="section-content">
+        <!-- Rest of the content remains unchanged -->
+    </div>
+</body>
+</html> 
