@@ -354,7 +354,7 @@
             </div>
             <div class="user-info">
                 <span id="userName"></span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                <button class="logout-btn">Logout</button>
             </div>
         </div>
     </div>
@@ -729,6 +729,9 @@
 
             const user = JSON.parse(userData);
             document.getElementById('userName').textContent = `${user.firstName} ${user.lastName} (${user.role})`;
+
+            // Add event listener for logout button
+            document.querySelector('.logout-btn').addEventListener('click', logout);
 
             // Set all form controls to readonly and disabled initially
             const formControls = document.querySelectorAll('.form-control');

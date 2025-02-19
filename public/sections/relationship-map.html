@@ -440,7 +440,7 @@
             </div>
             <div class="user-info">
                 <span id="userName"></span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                <button class="logout-btn">Logout</button>
             </div>
         </div>
     </div>
@@ -607,16 +607,31 @@
         let customerContactCounter = 1;
         let executiveSponsorCounter = 1;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set all form controls to read-only initially
+        window.onload = function() {
+            const token = localStorage.getItem('token');
+            const userData = localStorage.getItem('userData');
+            
+            if (!token || !userData) {
+                window.location.href = '/start';
+                return;
+            }
+
+            const user = JSON.parse(userData);
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName} (${user.role})`;
+
+            // Add event listener for logout button
+            document.querySelector('.logout-btn').addEventListener('click', logout);
+
+            // Set all form controls to readonly and disabled initially
             const formControls = document.querySelectorAll('.form-control');
-            formControls.forEach(input => {
-                input.readOnly = true;
+            formControls.forEach(control => {
+                control.setAttribute('readonly', true);
+                control.disabled = true;
             });
 
-            // Load account data
+            // Load the account data
             loadAccountData();
-        });
+        };
 
         async function loadAccountData() {
             try {
