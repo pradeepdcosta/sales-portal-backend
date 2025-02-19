@@ -435,10 +435,10 @@
         <div class="main-content">
             <div class="section-header">
                 <h2>01 EXECUTIVE SUMMARY</h2>
-                <button id="editButton" class="edit-btn" onclick="toggleEditMode()">Edit</button>
+                <button id="editButton" class="edit-btn">Edit</button>
                 <div id="actionButtons" class="action-buttons">
-                    <button class="save-btn" onclick="saveChanges()">Save Changes</button>
-                    <button class="cancel-btn" onclick="cancelChanges()">Cancel Changes</button>
+                    <button class="save-btn">Save Changes</button>
+                    <button class="cancel-btn">Cancel Changes</button>
                 </div>
             </div>
 
@@ -798,15 +798,18 @@
             const user = JSON.parse(userData);
             document.getElementById('userName').textContent = `${user.firstName} ${user.lastName} (${user.role})`;
 
+            // Add event listeners for all buttons
+            document.querySelector('.logout-btn').addEventListener('click', logout);
+            document.getElementById('editButton').addEventListener('click', toggleEditMode);
+            document.querySelector('.save-btn').addEventListener('click', saveChanges);
+            document.querySelector('.cancel-btn').addEventListener('click', cancelChanges);
+
             // Set all form controls to readonly and disabled initially
             const formControls = document.querySelectorAll('.form-control');
             formControls.forEach(control => {
                 control.setAttribute('readonly', true);
                 control.disabled = true;
             });
-
-            // Add event listener for logout button
-            document.querySelector('.logout-btn').addEventListener('click', logout);
 
             // Load the account data
             loadAccountData();
