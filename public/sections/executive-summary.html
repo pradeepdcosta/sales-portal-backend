@@ -404,7 +404,7 @@
             </div>
             <div class="user-info">
                 <span id="userName"></span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                <button class="logout-btn">Logout</button>
             </div>
         </div>
     </div>
@@ -804,6 +804,9 @@
                 control.setAttribute('readonly', true);
                 control.disabled = true;
             });
+
+            // Add event listener for logout button
+            document.querySelector('.logout-btn').addEventListener('click', logout);
 
             // Load the account data
             loadAccountData();

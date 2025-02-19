@@ -31,6 +31,24 @@ if (process.env.NODE_ENV === 'production') {
             }
         }
     }));
+} else {
+    app.use(helmet({
+        contentSecurityPolicy: false,  // Temporarily disable CSP for testing
+        crossOriginEmbedderPolicy: false,
+        crossOriginOpenerPolicy: false,
+        crossOriginResourcePolicy: false,
+        originAgentCluster: false,
+        dnsPrefetchControl: false,
+        referrerPolicy: { policy: "no-referrer" },
+        strictTransportSecurity: false,
+        xContentTypeOptions: false,
+        xDnsPrefetchControl: false,
+        xDownloadOptions: false,
+        xFrameOptions: false,
+        xPermittedCrossDomainPolicies: false,
+        xPoweredBy: false,
+        xXssProtection: false
+    }));
 }
 
 // Enable CORS with configuration
