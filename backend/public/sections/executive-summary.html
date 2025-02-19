@@ -3,7 +3,6 @@
 <head>
     <title>Executive Summary</title>
     <link rel="stylesheet" href="/styles/main.css">
-    <script src="/js/auth.js"></script>
 </head>
 <body>
     <div class="section-header">
@@ -28,6 +27,13 @@
         // Define all functions
         let originalData = {};
         let isEditMode = false;
+
+        function logout() {
+            console.log('Logout called');
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = '/start';
+        }
 
         function toggleEditMode() {
             console.log('Toggle edit mode called');
@@ -56,13 +62,6 @@
                 editButton.style.display = 'block';
                 actionButtons.classList.remove('show');
             }
-        }
-
-        function logout() {
-            console.log('Logout called');
-            localStorage.removeItem('token');
-            localStorage.removeItem('userData');
-            window.location.href = '/start';
         }
 
         function generatePDF() {
