@@ -289,7 +289,7 @@
             </nav>
             <div class="user-info">
                 <span id="userName"></span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                <button class="logout-btn">Logout</button>
             </div>
         </div>
     </div>
@@ -303,7 +303,7 @@
     </div>
 
     <div class="print-section">
-        <button id="printButton" class="print-btn" onclick="generatePDF()">
+        <button id="printButton" class="print-btn">
             <i class="fas fa-print"></i> Print Full Document
         </button>
     </div>
@@ -360,20 +360,7 @@
     </div>
 
     <script>
-        // Check if user is logged in
-        window.onload = function() {
-            const token = localStorage.getItem('token');
-            const userData = localStorage.getItem('userData');
-            
-            if (!token || !userData) {
-                window.location.href = '/start';
-                return;
-            }
-
-            const user = JSON.parse(userData);
-            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName} (${user.role})`;
-        };
-
+        // Define all functions
         function logout() {
             console.log('Logout called');
             localStorage.removeItem('token');
@@ -383,6 +370,7 @@
 
         async function generatePDF() {
             try {
+                console.log('Generate PDF called');
                 const token = localStorage.getItem('token');
                 if (!token) {
                     throw new Error('Not authenticated');
@@ -399,9 +387,7 @@
                     throw new Error('Failed to generate PDF');
                 }
 
-                // Create a blob from the PDF Stream
                 const blob = await response.blob();
-                // Create a link to download the PDF
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
@@ -415,6 +401,27 @@
                 alert('Error generating PDF: ' + error.message);
             }
         }
+
+        // Initialize everything when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded');
+            
+            // Check if user is logged in
+            const token = localStorage.getItem('token');
+            const userData = localStorage.getItem('userData');
+            
+            if (!token || !userData) {
+                window.location.href = '/start';
+                return;
+            }
+
+            const user = JSON.parse(userData);
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName} (${user.role})`;
+
+            // Set up event listeners
+            document.querySelector('.logout-btn').addEventListener('click', logout);
+            document.querySelector('.print-btn').addEventListener('click', generatePDF);
+        });
     </script>
 </body>
 </html> 

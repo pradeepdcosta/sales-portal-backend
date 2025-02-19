@@ -18,8 +18,9 @@ if (process.env.NODE_ENV === 'production') {
         contentSecurityPolicy: {
             directives: {
                 defaultSrc: ["'self'"],
-                scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "'unsafe-hashes'"],
-                scriptSrcAttr: ["'unsafe-inline'", "'unsafe-hashes'"],
+                scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+                scriptSrcAttr: ["'unsafe-inline'"],
+                scriptSrcElem: ["'self'", "'unsafe-inline'"],
                 styleSrc: ["'self'", "'unsafe-inline'"],
                 imgSrc: ["'self'", "data:", "blob:"],
                 connectSrc: ["'self'", "https://sales-portal-backend.onrender.com", "http://localhost:*", "*"],

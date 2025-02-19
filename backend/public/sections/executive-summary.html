@@ -3,9 +3,7 @@
 <head>
     <title>Executive Summary</title>
     <script>
-        let originalData = {};
-        let isEditMode = false;
-
+        // Define all functions first
         function toggleEditMode() {
             console.log('Toggle edit mode called');
             isEditMode = !isEditMode;
@@ -47,9 +45,17 @@
             window.print();
         }
 
-        // Initialize when the page loads
-        window.onload = function() {
-            console.log('Window loaded');
+        // Initialize everything when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded');
+            
+            // Set up event listeners
+            document.getElementById('editButton').addEventListener('click', toggleEditMode);
+            document.querySelector('.save-btn').addEventListener('click', saveChanges);
+            document.querySelector('.cancel-btn').addEventListener('click', cancelChanges);
+            document.querySelector('.logout-btn').addEventListener('click', logout);
+            document.querySelector('.print-btn').addEventListener('click', generatePDF);
+
             // Set all form controls to readonly initially
             const formControls = document.querySelectorAll('.form-control');
             formControls.forEach(control => {
@@ -59,25 +65,29 @@
 
             // Load the account data
             loadAccountData();
-        };
+        });
+
+        // Initialize variables
+        let originalData = {};
+        let isEditMode = false;
     </script>
 </head>
 <body>
     <div class="section-header">
         <h2>01 EXECUTIVE SUMMARY</h2>
-        <button id="editButton" class="edit-btn" onclick="toggleEditMode()">Edit</button>
+        <button id="editButton" class="edit-btn">Edit</button>
         <div id="actionButtons" class="action-buttons">
-            <button class="save-btn" onclick="saveChanges()">Save Changes</button>
-            <button class="cancel-btn" onclick="cancelChanges()">Cancel Changes</button>
+            <button class="save-btn">Save Changes</button>
+            <button class="cancel-btn">Cancel Changes</button>
         </div>
     </div>
 
     <div class="user-info">
         <span id="userName"></span>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+        <button class="logout-btn">Logout</button>
     </div>
 
-    <button class="print-btn" onclick="generatePDF()">
+    <button class="print-btn">
         <i class="fas fa-print"></i> Print Full Document
     </button>
 
