@@ -281,12 +281,12 @@
             <img src="/images/Logo.png" alt="Vision Vault Logo">
         </div>
         <div class="header-right">
-            <div class="nav-links">
+            <nav class="nav-links">
                 <a href="#" class="nav-link">About Us</a>
                 <a href="#" class="nav-link">Process Flow</a>
                 <a href="#" class="nav-link">Reference Docs</a>
                 <a href="#" class="nav-link">Contact Us</a>
-            </div>
+            </nav>
             <div class="user-info">
                 <span id="userName"></span>
                 <button class="logout-btn" onclick="logout()">Logout</button>
@@ -375,16 +375,10 @@
         };
 
         function logout() {
-            // Add fade out animation to the entire body
-            document.body.style.animation = 'fadeOut 0.5s ease forwards';
-            document.querySelector('.user-info').style.animation = 'slideUp 0.5s ease forwards';
-
-            // Clear user data and redirect after animation
-            setTimeout(() => {
-                localStorage.removeItem('token');
-                localStorage.removeItem('userData');
-                window.location.href = '/start';
-            }, 400); // Slightly shorter than animation duration to ensure smooth transition
+            console.log('Logout called');
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = '/start';
         }
 
         async function generatePDF() {
