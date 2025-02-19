@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Executive Summary - Account Development Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            padding-top: 80px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e8e4d9;
+            padding: 15px 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            font-size: 0.9em;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .logo img {
+            height: 80px;
+            width: auto;
+        }
+
+        .user-info {
+            text-align: right;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #990000;
+        }
+
+        .container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        .side-nav {
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #ddd;
+            padding: 20px 0;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .home-link {
+            padding: 15px 20px;
+            color: #444;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .home-link:hover {
+            background-color: #f8f8f8;
+            color: #cc0000;
+        }
+
+        .nav-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 4px 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            color: #444;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background-color: #f8f8f8;
+            padding-left: 25px;
+            color: #cc0000;
+        }
+
+        .nav-item.active {
+            background-color: #f0f0f0;
+            border-left: 4px solid #cc0000;
+            color: #cc0000;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background-color: white;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            background-color: #cc0000;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h2 {
+            margin: 0;
+        }
+
+        .edit-btn {
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .edit-btn:hover {
+            background-color: #990000;
+        }
+
+        .action-buttons {
+            display: none;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-buttons.show {
+            display: flex;
+        }
+
+        .save-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .save-btn:hover {
+            background-color: #218838;
+        }
+
+        .cancel-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .cancel-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #cc0000;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #cc0000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+
+        .form-control {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #e6f3ff;
+            font-size: 1em;
+            line-height: 1.5;
+            margin: 12px;
+            box-sizing: border-box;
+        }
+
+        .form-control.editable {
+            background-color: #e6f3ff;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .document-approval {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .approval-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .left-column, .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .right-column {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+        }
+
+        .section {
+            border: 1px solid #ddd;
+            background: white;
+            height: 100%;
+        }
+
+        .section-title {
+            background-color: #cc0000;
+            color: white;
+            padding: 8px 12px;
+            margin: 0;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .section-content {
+            padding: 12px;
+            box-sizing: border-box;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .subsection {
+            margin: 12px;
+            box-sizing: border-box;
+        }
+
+        .subsection:last-child {
+            margin-bottom: 0;
+        }
+
+        .subsection-title {
+            background-color: #f0f0f0;
+            padding: 8px 12px;
+            margin: 0 0 12px 0;
+            font-weight: bold;
+        }
+
+        .annual-spend-table {
+            margin-top: auto;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .annual-spend-table th,
+        .annual-spend-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .annual-spend-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        .annual-spend-table input.form-control {
+            margin: 0;
+            width: 100%;
+        }
+
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .print-btn {
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 20px;
+            margin-top: auto;
+        }
+
+        .print-btn:hover {
+            background-color: #990000;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .print-btn i {
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="/images/Logo.png" alt="Vision Vault Logo">
+        </div>
+        <div class="header-right">
+            <div class="nav-links">
+                <a href="#" class="nav-link">About Us</a>
+                <a href="#" class="nav-link">Process Flow</a>
+                <a href="#" class="nav-link">Reference Docs</a>
+                <a href="#" class="nav-link">Contact Us</a>
+            </div>
+            <div class="user-info">
+                <span id="userName"></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="side-nav">
+            <a href="/account-plan.html" class="home-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="/sections/executive-summary.html" class="nav-item active">
+                <span>01 Executive Summary</span>
+            </a>
+            <a href="/sections/customer-overview.html" class="nav-item">
+                <span>02 Customer Overview</span>
+            </a>
+            <a href="/sections/account-overview.html" class="nav-item">
+                <span>03 Account Overview</span>
+            </a>
+            <a href="/sections/relationship-map.html" class="nav-item">
+                <span>04 Relationship Map</span>
+            </a>
+            <button class="print-btn" onclick="generatePDF()">
+                <i class="fas fa-print"></i> Print Full Document
+            </button>
+        </div>
+
+        <div class="main-content">
+            <div class="section-header">
+                <h2>01 EXECUTIVE SUMMARY</h2>
+                <button id="editButton" class="edit-btn" onclick="toggleEditMode()">Edit</button>
+                <div id="actionButtons" class="action-buttons">
+                    <button class="save-btn" onclick="saveChanges()">Save Changes</button>
+                    <button class="cancel-btn" onclick="cancelChanges()">Cancel Changes</button>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="left-column">
+                    <div class="section">
+                        <h3 class="section-title">Management Summary</h3>
+                        <div class="section-content">
+                            <div class="form-group">
+                                <label class="form-label">Management Business Overview</label>
+                                <textarea class="form-control" name="managementBusinessOverview" readonly></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Our Business and Relationship</label>
+                                <textarea class="form-control" name="businessRelationship" readonly></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Success Stories</label>
+                                <textarea class="form-control" name="successStories" readonly></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Challenges / Issues / Asks</label>
+                                <textarea class="form-control" name="challenges" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">Account Vision</h3>
+                        <div class="section-content">
+                            <textarea class="form-control" name="accountVision" rows="6" placeholder="Include here the VBI longer-term / 3 year strategic vision. Please indicate your ambition and vision, current and potential revenues"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right-column">
+                    <div class="section">
+                        <h3 class="section-title">Executive Programme Accounts only</h3>
+                        <div class="section-content">
+                            <div class="form-group">
+                                <div class="form-label">VBI Executive Sponsor</div>
+                                <input type="text" class="form-control" name="executiveSponsor">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-label">Global VBI Executive Sponsor (where assigned)</div>
+                                <input type="text" class="form-control" name="globalExecutiveSponsor">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">Key Account Information</h3>
+                        <div class="section-content">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div class="form-group">
+                                    <div class="form-label">Industry</div>
+                                    <input type="text" class="form-control" name="industry">
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">Customer NPS</div>
+                                    <input type="text" class="form-control" name="customerNPS">
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">VBI Sales Segment</div>
+                                    <input type="text" class="form-control" name="salesSegment">
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">Financial Year End Date</div>
+                                    <input type="date" class="form-control" name="financialYearEnd">
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 15px;">
+                                <div class="form-label">Annual Spend with VBI</div>
+                                <table class="annual-spend-table">
+                                    <tr>
+                                        <th style="width: 40%"></th>
+                                        <th>Previous FY</th>
+                                        <th>Current FY</th>
+                                    </tr>
+                                    <tr>
+                                        <td>UK</td>
+                                        <td><input type="text" class="form-control" name="ukPreviousFY"></td>
+                                        <td><input type="text" class="form-control" name="ukCurrentFY"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rest of World (MNC)</td>
+                                        <td><input type="text" class="form-control" name="rowPreviousFY"></td>
+                                        <td><input type="text" class="form-control" name="rowCurrentFY"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section full-width-section">
+                    <h3 class="section-title">Priority Opportunities</h3>
+                    <div class="section-content">
+                        <div class="subsection">
+                            <textarea class="form-control" name="opportunity1" rows="4" placeholder="Opportunity name / Product, Value, Close Date
+• Detail on opportunity, include details of critical decision point or compelling event for customer
+• Key next steps
+• Any asks"></textarea>
+                        </div>
+                        <div class="subsection">
+                            <textarea class="form-control" name="opportunity2" rows="4" placeholder="Opportunity name / Product, Value, Close Date
+• Detail on opportunity, include details of critical decision point or compelling event for customer
+• Key next steps
+• Any asks"></textarea>
+                        </div>
+                        <div class="subsection">
+                            <textarea class="form-control" name="opportunity3" rows="4" placeholder="Opportunity name / Product, Value, Close Date
+• Detail on opportunity, include details of critical decision point or compelling event for customer
+• Key next steps
+• Any asks"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section full-width-section">
+                    <h3 class="section-title">Document Approval</h3>
+                    <div class="section-content">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-group">
+                                <div class="form-label">Created by (name & date)</div>
+                                <input type="text" class="form-control" name="createdBy">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-label">Manager approval (name & date)</div>
+                                <input type="text" class="form-control" name="managerApproval">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let originalData = {};
+        let isEditMode = false;
+
+        async function loadAccountData() {
+            try {
+                const token = localStorage.getItem('token');
+                const userData = localStorage.getItem('userData');
+
+                if (!token || !userData) {
+                    window.location.href = '/start';
+                    return;
+                }
+
+                // Get the account ID from the user's managed accounts
+                const accountResponse = await fetch('/api/accounts', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!accountResponse.ok) {
+                    throw new Error('Failed to fetch account information');
+                }
+
+                const accountData = await accountResponse.json();
+                
+                if (!accountData.success) {
+                    throw new Error('Failed to fetch account data');
+                }
+
+                if (!accountData.data || !accountData.data.managedAccounts || accountData.data.managedAccounts.length === 0) {
+                    throw new Error('No accounts found. Please make sure you have access to an account.');
+                }
+
+                const accountId = accountData.data.managedAccounts[0].id;
+
+                // Get the section data
+                const response = await fetch(`/api/account/${accountId}/section/executive_summary`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to load section data');
+                }
+
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.message || 'Failed to load section data');
+                }
+
+                // Populate form fields with the data
+                if (data.data && data.data.content) {
+                    Object.keys(data.data.content).forEach(key => {
+                        const input = document.querySelector(`[name="${key}"]`);
+                        if (input) {
+                            input.value = data.data.content[key] || '';
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading account data:', error);
+                alert('Error loading account data: ' + error.message);
+            }
+        }
+
+        async function saveChanges() {
+            try {
+                // Get form data
+                const formData = {};
+                document.querySelectorAll('.form-control').forEach(input => {
+                    if (input.name) {
+                        formData[input.name] = input.value;
+                    }
+                });
+
+                // Get token and check if it exists
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('You are not logged in. Please log in and try again.');
+                }
+
+                // Get user data and check if it exists
+                const userData = localStorage.getItem('userData');
+                if (!userData) {
+                    throw new Error('User data not found. Please log in and try again.');
+                }
+
+                // Get account ID from API
+                const accountResponse = await fetch('/api/accounts', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!accountResponse.ok) {
+                    const errorData = await accountResponse.json();
+                    throw new Error(errorData.message || 'Failed to fetch account information');
+                }
+
+                const accountData = await accountResponse.json();
+                
+                if (!accountData.success) {
+                    throw new Error('Failed to fetch account data');
+                }
+
+                if (!accountData.data || !accountData.data.managedAccounts || accountData.data.managedAccounts.length === 0) {
+                    throw new Error('No accounts found. Please make sure you have access to an account.');
+                }
+
+                const accountId = accountData.data.managedAccounts[0].id;
+
+                // Save the changes
+                const response = await fetch(`/api/account/${accountId}/section/executive_summary`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        content: formData,
+                        lastModifiedBy: JSON.parse(userData).id,
+                        lastModifiedAt: new Date().toISOString()
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to save changes');
+                }
+
+                const responseData = await response.json();
+                if (!responseData.success) {
+                    throw new Error(responseData.message || 'Failed to save changes');
+                }
+
+                // Update UI
+                alert('Changes saved successfully!');
+                isEditMode = false;
+                const formControls = document.querySelectorAll('.form-control');
+                formControls.forEach(control => {
+                    control.classList.remove('editable');
+                    control.setAttribute('readonly', true);
+                });
+                document.getElementById('editButton').style.display = 'block';
+                document.getElementById('actionButtons').classList.remove('show');
+                
+                // Reload the data to ensure we're showing the latest version
+                await loadAccountData();
+            } catch (error) {
+                console.error('Error saving changes:', error);
+                alert('Error saving changes: ' + error.message);
+            }
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const formControls = document.querySelectorAll('.form-control');
+            const editButton = document.getElementById('editButton');
+            const actionButtons = document.getElementById('actionButtons');
+
+            if (isEditMode) {
+                // Store original values before editing
+                formControls.forEach(control => {
+                    if (control.name) {
+                        originalData[control.name] = control.value;
+                    }
+                    control.classList.add('editable');
+                    control.removeAttribute('readonly');
+                    control.disabled = false;
+                });
+                editButton.style.display = 'none';
+                actionButtons.classList.add('show');
+            } else {
+                formControls.forEach(control => {
+                    control.classList.remove('editable');
+                    control.setAttribute('readonly', true);
+                    control.disabled = true;
+                });
+                editButton.style.display = 'block';
+                actionButtons.classList.remove('show');
+            }
+        }
+
+        function cancelChanges() {
+            isEditMode = false;
+            const formControls = document.querySelectorAll('.form-control');
+            formControls.forEach(control => {
+                // Restore original value
+                if (control.name && originalData[control.name] !== undefined) {
+                    control.value = originalData[control.name];
+                }
+                control.classList.remove('editable');
+                control.setAttribute('readonly', true);
+                control.disabled = true;  // Ensure the control is fully disabled
+            });
+            document.getElementById('editButton').style.display = 'block';
+            document.getElementById('actionButtons').classList.remove('show');
+            originalData = {}; // Clear stored original data
+        }
+
+        window.onload = function() {
+            const token = localStorage.getItem('token');
+            const userData = localStorage.getItem('userData');
+            
+            if (!token || !userData) {
+                window.location.href = '/start';
+                return;
+            }
+
+            const user = JSON.parse(userData);
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName} (${user.role})`;
+
+            // Set all form controls to readonly and disabled initially
+            const formControls = document.querySelectorAll('.form-control');
+            formControls.forEach(control => {
+                control.setAttribute('readonly', true);
+                control.disabled = true;
+            });
+
+            // Load the account data
+            loadAccountData();
+        };
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = '/start';
+        }
+
+        async function generatePDF() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('Not authenticated');
+                }
+
+                const response = await fetch('/api/generate-pdf', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate PDF');
+                }
+
+                // Create a blob from the PDF Stream
+                const blob = await response.blob();
+                // Create a link to download the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'account-plan.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Error generating PDF: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

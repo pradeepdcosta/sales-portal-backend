@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Development Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            padding-top: 80px;  /* Add padding to account for fixed header */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: #e8e4d9;
+            padding: 15px 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            font-size: 0.9em;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .user-info {
+            text-align: right;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 80px;
+            width: auto;
+        }
+
+        .logo-text {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            position: relative;
+        }
+
+        .logo-v {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            position: relative;
+        }
+
+        .logo-diamond {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background-color: #c4a052;
+            transform: rotate(45deg);
+            margin-top: -2px;
+        }
+
+        .logo-vault-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+        }
+
+        .logo-vault-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .guidance-box {
+            background-color: #cc0000;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            margin: 20px 0;
+            width: calc(100% - 60px); /* Full width minus padding */
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .guidance-box h3 {
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .guidance-box p {
+            margin: 0;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .guidance-content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+            padding: 0 30px 30px;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .section-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background-color: #f8f8f8;
+        }
+
+        .section-card:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section-number {
+            color: #cc0000;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        li:before {
+            content: "■";
+            color: #cc0000;
+            position: absolute;
+            left: 0;
+            font-size: 0.8em;
+        }
+
+        .logout-btn {
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logout-btn:hover {
+            background-color: #990000;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* Fade out animation */
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Add animation keyframes */
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+
+        .print-section {
+            text-align: right;
+            padding: 0 30px;
+            margin: 10px 0;
+        }
+
+        .print-btn {
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .print-btn:hover {
+            background-color: #990000;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .print-btn i {
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="/images/Logo.png" alt="Vision Vault Logo">
+        </div>
+        <div class="header-right">
+            <div class="nav-links">
+                <a href="#" class="nav-link">About Us</a>
+                <a href="#" class="nav-link">Process Flow</a>
+                <a href="#" class="nav-link">Reference Docs</a>
+                <a href="#" class="nav-link">Contact Us</a>
+            </div>
+            <div class="user-info">
+                <span id="userName"></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="guidance-box">
+        <h3>Guidance:</h3>
+        <div class="guidance-content">
+            <p>The account development plan has the following sections below. Please enter each section to document and capture the details in each subsection. In the boxes there is help text, which you should overtype with your information. For further help including information on market drivers and contacts please see the template guidance document.</p>
+            <p>Where a plan has already been created in the CRM, then copy and paste the information into this document. You may need to summarise to prevent impacting the format.</p>
+        </div>
+    </div>
+
+    <div class="print-section">
+        <button id="printButton" class="print-btn" onclick="generatePDF()">
+            <i class="fas fa-print"></i> Print Full Document
+        </button>
+    </div>
+
+    <div class="grid-container">
+        <a href="/sections/executive-summary.html" class="section-card">
+            <div class="section-number">01</div>
+            <div class="section-title">Executive summary</div>
+            <ul>
+                <li>Management Summary</li>
+                <li>Account Vision</li>
+                <li>Executive Sponsor</li>
+                <li>Key account Information</li>
+                <li>Priority Opportunities</li>
+                <li>Document Approval</li>
+            </ul>
+        </a>
+
+        <a href="/sections/customer-overview.html" class="section-card">
+            <div class="section-number">02</div>
+            <div class="section-title">Customer Overview</div>
+            <ul>
+                <li>Customer Business Overview</li>
+                <li>Customer Business Strategy and Challenges</li>
+                <li>Market Drivers: External factors impacting the customer</li>
+            </ul>
+        </a>
+
+        <a href="/sections/account-overview.html" class="section-card">
+            <div class="section-number">03</div>
+            <div class="section-title">Account Overview</div>
+            <ul>
+                <li>VBI Strategy</li>
+                <li>Strategic Priorities, Initiatives and Action Plans</li>
+                <li>Customer SWOT – with VBI impact</li>
+                <li>Current VBI position</li>
+                <li>Top 5 Opportunities, Wins & Losses</li>
+                <li>Competitive Landscape</li>
+                <li>LOB & Global Business Strategy (optional)</li>
+            </ul>
+        </a>
+
+        <a href="/sections/relationship-map.html" class="section-card">
+            <div class="section-number">04</div>
+            <div class="section-title">Relationship Map & Engagement Plan</div>
+            <ul>
+                <li>Key Customer contacts</li>
+                <li>Executive sponsor</li>
+                <li>Customer NPS</li>
+                <li>Key Engagement</li>
+                <li>Organisation chart (optional)</li>
+            </ul>
+        </a>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        window.onload = function() {
+            const token = localStorage.getItem('token');
+            const userData = localStorage.getItem('userData');
+            
+            if (!token || !userData) {
+                window.location.href = '/start';
+                return;
+            }
+
+            const user = JSON.parse(userData);
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName} (${user.role})`;
+        };
+
+        function logout() {
+            // Add fade out animation to the entire body
+            document.body.style.animation = 'fadeOut 0.5s ease forwards';
+            document.querySelector('.user-info').style.animation = 'slideUp 0.5s ease forwards';
+
+            // Clear user data and redirect after animation
+            setTimeout(() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('userData');
+                window.location.href = '/start';
+            }, 400); // Slightly shorter than animation duration to ensure smooth transition
+        }
+
+        async function generatePDF() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('Not authenticated');
+                }
+
+                const response = await fetch('/api/generate-pdf', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate PDF');
+                }
+
+                // Create a blob from the PDF Stream
+                const blob = await response.blob();
+                // Create a link to download the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'account-plan.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Error generating PDF: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html> 
